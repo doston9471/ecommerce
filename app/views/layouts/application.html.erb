@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ecommerce</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+  <div class="container" id="notice_wrapper">
+    <% flash.each do |key, value| %>
+      <div class="alert alert-<%= key %>">
+        <%= value %>
+      </div>
+    <% end %>
+  </div>
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <%= link_to 'e-commerce', root_path, class: 'navbar-brand' %>
+      </div>
+      <div id="navbar">
+        <ul class="nav navbar-nav">
+          <li><%= link_to 'Home', root_path %></li>
+          <li><%= link_to 'Products', products_path %></li>
+          <% if user_signed_in? %>
+            <li><%= link_to 'New Product', new_product_path %></li>
+            <li><%= link_to 'Admin Dashboard', rails_admin_path %></li>
+          <% end %>
+        </ul>
+        <ul class="nav navbar-nav pull-right">
+          <% if user_signed_in? %>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <%= current_user.username %>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><%= link_to 'Log out', destroy_user_session_path, method: :delete %></li>
+              </ul>
+            </li>
+          <% else %>
+            <li><%= link_to 'Log In', new_user_session_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <h3>Categories</h3>
+    <div id="category">
+      <ul class="nav navbar-nav pull-left">
+        <% Category.all.each do |category| %>
+            <li><%= link_to category.title, products_path(category: category.title) %></li>
+        <% end %>
+      </ul>
+    </div>
+    <hr>
+    <% if @cart %>
+      <%= hidden_div_if(@cart.line_items.empty?, class: 'col-md-2 cartHolder' , id: 'cart') do %>
+        <%= render @cart %>
+      <% end %>
+    <% end %>
+    <div class="jumbotron">
+      <%= yield %>    
+    </div>
+  </div>
+
+  </body>
+</html>

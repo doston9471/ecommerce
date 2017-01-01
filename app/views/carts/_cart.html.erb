@@ -1,0 +1,54 @@
+<% unless cart.line_items.empty? %>
+	<h3>Your Cart</h3>
+	<hr>
+	<div class="col-md-2" id="cart">
+		<table class="table">
+			<%= render(cart.line_items) %>
+			<tr>
+				<td colspan="2">Total</td>
+				<td><%= number_to_currency(cart.total_price) %></td>
+			</tr>
+			<td><%= button_to 'Change', "#",class: 'btn btn-primary change_product' %></td>
+
+		</table>
+		<br>
+		<%= button_to "Checkout", new_order_path, method: :get %>
+		<br>
+		<%= button_to 'Empty cart', cart, method: :delete, confirm: 'Are you sure?', class: 'btn btn-danger' %>
+		<br>
+		<%= link_to "Cart", @cart, class: 'btn btn-warning' %>
+		<hr>
+	</div>
+<% end %>
+
+
+<script type="text/javascript">
+	
+$(document).ready(function() {
+
+	var but=$(".change_product");
+	console.log("button: "+ but);
+
+  $(".change_product").click(function(e) {
+	// alert("dsf");
+	console.log("adfadsf");
+    e.preventDefault();
+    var proId=1;
+    var proQuantity=1;
+    var urls = "/../line_items?product_id="+proId+"&quantity="+proQuantity;
+    $.ajax({
+        url: urls,
+        type: 'POST',
+        // dataType: "json",
+        success: function(data, status, jqXHR){
+        		
+        		console.log(data);
+
+        },
+    })
+            .done(function(){console.log("success");})
+            .fail(function(){console.log("failed");})
+            .always(function(){console.log("complete");});
+  });
+});
+</script>
